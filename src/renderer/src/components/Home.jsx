@@ -3,7 +3,7 @@ import ProductCardList from './ProductCardList'
 import Footer from './Footer'
 import { useState } from 'react'
 
-export default function Home() {
+export default function Home({orderNumber, incrementOrderNumber}) {
   const [selectedCount, setSelectedCount] = useState(0)
 
   const handleProductButtonClick = () => {
@@ -14,7 +14,11 @@ export default function Home() {
     <>
       <StickyHeader title="Order Menu" />
       <ProductCardList onProductButtonClick={handleProductButtonClick} />
-      <Footer selectedCount={selectedCount} />
+      <Footer
+        selectedCount = {selectedCount}
+        orderNumber={orderNumber}
+        incrementOrderNumber={incrementOrderNumber}
+      />
     </>
   )
 }

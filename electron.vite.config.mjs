@@ -16,6 +16,6 @@ export default defineConfig({
       }
     },
     plugins: [react()],
-    server: { proxy: { '/endPointName': 'http://localhost:portNumber' } }
+    server: { proxy: { '/write': 'http://localhost:5000' } }
   }
 })
