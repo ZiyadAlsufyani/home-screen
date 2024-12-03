@@ -7,8 +7,6 @@ const Footer = ({ selectedCount, orderNumber, incrementOrderNumber }) => {
   const navigate = useNavigate();
 
   const handleButtonClick = async () => {
-    incrementOrderNumber(); // Increment the order number
-
     const fromDevice = 'home';  // value for fromDevice
     const toDevice = 'kitchen';  // value for toDevice
 
@@ -20,13 +18,19 @@ const Footer = ({ selectedCount, orderNumber, incrementOrderNumber }) => {
         },
         body: JSON.stringify({ fromDevice: fromDevice, toDevice: toDevice, orderNum: parseInt(orderNumber) })
       });
+
       const data = await response.text();
-      //alert(data);
+      if (response.status !== 200) {
+        alert(data); // Show alert if there are no subscriptions
+        return; // Stop further execution
+      }
+
+      incrementOrderNumber(); // Increment the order number only if data is written successfully
+      navigate('/OrderNumber', { state: { orderNumber } });
     } catch (error) {
       console.error('Error writing data:', error);
+      alert('Error writing data: ' + error.message); // Show alert if there's an error
     }
-
-    navigate('/OrderNumber', { state: { orderNumber } });
   };
 
   return (

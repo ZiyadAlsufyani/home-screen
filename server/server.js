@@ -11,14 +11,19 @@ app.use(bodyParser.json());
 
 app.post('/write', async (req, res) => {
   const { fromDevice, toDevice, orderNum } = req.body;
-  console.log(req.body)
+  console.log(req.body);
 
   const connector = new rti.Connector('MyParticipantLibrary::MyPubParticipant', configFile);
   const output = connector.getOutput('MyPublisher::MySquareWriter');
 
   try {
     console.log('Waiting for subscriptions...');
-    await output.waitForSubscriptions();
+    const waitTime = 5000; // Timeout in milliseconds
+    const hasSubscriptions = await output.waitForSubscriptions(waitTime);
+
+    if (!hasSubscriptions) {
+      throw new Error('No subscriptions found');
+    }
 
     console.log('Writing...');
     output.instance.setString('fromDevice', fromDevice);
@@ -29,7 +34,7 @@ app.post('/write', async (req, res) => {
     res.status(200).send('Data written successfully');
   } catch (err) {
     console.error('Error encountered:', err);
-    res.status(500).send('Failed to write data');
+    res.status(500).send('Failed to write data: ' + err.message);
   } finally {
     connector.close();
   }
