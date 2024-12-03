@@ -7,22 +7,25 @@ const Footer = ({ selectedCount, orderNumber, incrementOrderNumber }) => {
   const navigate = useNavigate();
 
   const handleButtonClick = async () => {
-    const fromDevice = 'home';  // value for fromDevice
-    const toDevice = 'kitchen';  // value for toDevice
+    const fromDevice = 'home';
+    const toDevices = ['kitchen', 'display']; // Array of toDevice values
 
     try {
-      const response = await fetch('/write', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ fromDevice: fromDevice, toDevice: toDevice, orderNum: parseInt(orderNumber) })
-      });
+      // Send to each toDevice
+      for (const toDevice of toDevices) {
+        const response = await fetch('/write', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ fromDevice: fromDevice, toDevice: toDevice, orderNum: parseInt(orderNumber) })
+        });
 
-      const data = await response.text();
-      if (response.status !== 200) {
-        alert(data); // Show alert if there are no subscriptions
-        return; // Stop further execution
+        const data = await response.text();
+        if (response.status !== 200) {
+          alert(data); // Show alert if there are no subscriptions
+          return; // Stop further execution
+        }
       }
 
       incrementOrderNumber(); // Increment the order number only if data is written successfully
