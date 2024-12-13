@@ -12,8 +12,7 @@ app.use(bodyParser.json());
 app.post('/write', async (req, res) => {
   const { fromDevice, toDevice, orderNum } = req.body;
   console.log(req.body);
-
-  const connector = new rti.Connector('MyParticipantLibrary::MyPubParticipant', configFile);
+  const connector = new rti.Connector('HomeScreenDomainParticipantLibrary::MyPubParticipant', configFile);
   const output = connector.getOutput('MyPublisher::MySquareWriter');
 
   try {
