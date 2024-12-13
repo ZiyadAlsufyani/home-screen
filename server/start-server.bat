@@ -1,3 +1,3 @@
 @echo off
 set toDevice=home
-npm run dev
+node server.js

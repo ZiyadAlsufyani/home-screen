@@ -3,11 +3,37 @@ const path = require('path');
 const rti = require('rticonnextdds-connector');
 const app = express();
 const bodyParser = require('body-parser');
+const fs = require('fs');
 
 const configFile = path.join(__dirname, 'QSystem.xml');
+const stateFile = path.join(__dirname, 'appState.json');
 const PORT = 5000;
 
+// Initialize state
+let appState = {
+  lastOrderNum: 0
+};
+
+// Load saved state if exists
+try {
+  if (fs.existsSync(stateFile)) {
+    appState = JSON.parse(fs.readFileSync(stateFile));
+  }
+} catch (err) {
+  console.error('Error loading state:', err);
+}
+
+// Save state helper
+const saveState = () => {
+  fs.writeFileSync(stateFile, JSON.stringify(appState));
+};
+
 app.use(bodyParser.json());
+
+// Get last order number
+app.get('/last-order', (req, res) => {
+  res.json({ lastOrderNum: appState.lastOrderNum });
+});
 
 app.post('/write', async (req, res) => {
   const { fromDevice, toDevice, orderNum } = req.body;
@@ -17,7 +43,7 @@ app.post('/write', async (req, res) => {
 
   try {
     console.log('Waiting for subscriptions...');
-    const waitTime = 5000; // Timeout in milliseconds
+    const waitTime = 5000;
     const hasSubscriptions = await output.waitForSubscriptions(waitTime);
 
     if (!hasSubscriptions) {
@@ -30,6 +56,9 @@ app.post('/write', async (req, res) => {
     output.instance.setNumber('orderNum', orderNum);
     output.write();
 
+    // Update and save state
+    appState.lastOrderNum = orderNum;
+    saveState();
     res.status(200).send('Data written successfully');
   } catch (err) {
     console.error('Error encountered:', err);
