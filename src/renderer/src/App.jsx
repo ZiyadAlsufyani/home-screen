@@ -8,27 +8,27 @@ function App() {
     return parseInt(localStorage.getItem('orderNumber')) || 1;
   });
 
-  useEffect(() => {
-    const syncWithServer = async () => {
-      try {
-        const response = await fetch('/last-order');
-        if (!response.ok) {
-          throw new Error('Server response not ok');
-        }
-        const data = await response.json();
-        const serverOrderNum = data.lastOrderNum + 1;
+  // useEffect(() => {
+  //   const syncWithServer = async () => {
+  //     try {
+  //       const response = await fetch('/last-order');
+  //       if (!response.ok) {
+  //         throw new Error('Server response not ok');
+  //       }
+  //       const data = await response.json();
+  //       const serverOrderNum = data.lastOrderNum + 1;
         
-        if (serverOrderNum > orderNumber) {
-          setOrderNumber(serverOrderNum);
-          localStorage.setItem('orderNumber', serverOrderNum.toString());
-        }
-      } catch (error) {
-        console.error('Failed to sync with server:', error);
-      }
-    };
+  //       if (serverOrderNum > orderNumber) {
+  //         setOrderNumber(serverOrderNum);
+  //         localStorage.setItem('orderNumber', serverOrderNum.toString());
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to sync with server:', error);
+  //     }
+  //   };
 
-    syncWithServer();
-  }, []);
+  //   syncWithServer();
+  // }, []);
 
   const incrementOrderNumber = () => {
     setOrderNumber(prev => {

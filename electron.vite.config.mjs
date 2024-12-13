@@ -17,8 +17,7 @@ export default defineConfig({
     },
     plugins: [react()],
     server: { proxy: { 
-      "/write": "http://localhost:5000",
-      "/last-order": "http://localhost:5000" 
+      "/write": "http://localhost:5000" 
        } }
   }
 })
