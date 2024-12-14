@@ -8,22 +8,15 @@ const configFile = path.join(__dirname, 'QSystem.xml');
 const PORT = 5000;
 
 app.use(bodyParser.json());
-const connector = new rti.Connector('HomeScreenDomainParticipantLibrary::MyPubParticipant', configFile);
-const output = connector.getOutput('MyPublisher::MySquareWriter');
+
+const connector = new rti.Connector('HomeScreenDomainParticipantLibrary::HomeScreenPubParticipant', configFile);
+const output = connector.getOutput('HomeScreenPublisher::HomeScreenWriter');
+
 app.post('/write', async (req, res) => {
   const { fromDevice, toDevice, orderNum } = req.body;
   console.log(req.body);
-  
 
   try {
-    // console.log('Waiting for subscriptions...');
-    // const waitTime = 5000;
-    // const hasSubscriptions = await output.waitForSubscriptions(waitTime);
-
-    // if (!hasSubscriptions) {
-    //   throw new Error('No subscriptions found');
-    // }
-
     console.log('Writing...');
     output.instance.setString('fromDevice', fromDevice);
     output.instance.setString('toDevice', toDevice);
