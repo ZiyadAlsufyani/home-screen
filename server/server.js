@@ -8,21 +8,21 @@ const configFile = path.join(__dirname, 'QSystem.xml');
 const PORT = 5000;
 
 app.use(bodyParser.json());
-
+const connector = new rti.Connector('HomeScreenDomainParticipantLibrary::MyPubParticipant', configFile);
+const output = connector.getOutput('MyPublisher::MySquareWriter');
 app.post('/write', async (req, res) => {
   const { fromDevice, toDevice, orderNum } = req.body;
   console.log(req.body);
-  const connector = new rti.Connector('HomeScreenDomainParticipantLibrary::MyPubParticipant', configFile);
-  const output = connector.getOutput('MyPublisher::MySquareWriter');
+  
 
   try {
-    console.log('Waiting for subscriptions...');
-    const waitTime = 5000;
-    const hasSubscriptions = await output.waitForSubscriptions(waitTime);
+    // console.log('Waiting for subscriptions...');
+    // const waitTime = 5000;
+    // const hasSubscriptions = await output.waitForSubscriptions(waitTime);
 
-    if (!hasSubscriptions) {
-      throw new Error('No subscriptions found');
-    }
+    // if (!hasSubscriptions) {
+    //   throw new Error('No subscriptions found');
+    // }
 
     console.log('Writing...');
     output.instance.setString('fromDevice', fromDevice);
@@ -34,11 +34,22 @@ app.post('/write', async (req, res) => {
   } catch (err) {
     console.error('Error encountered:', err);
     res.status(500).send('Failed to write data: ' + err.message);
-  } finally {
-    connector.close();
-  }
+  } 
 });
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
+});
+
+// Handle termination signals
+process.on('SIGINT', () => {
+  console.log('SIGINT signal received: closing connector');
+  connector.close();
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing connector');
+  connector.close();
+  process.exit(0);
 });
