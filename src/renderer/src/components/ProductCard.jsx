@@ -6,19 +6,19 @@ import CardOverflow from '@mui/joy/CardOverflow'
 import Chip from '@mui/joy/Chip'
 import Typography from '@mui/joy/Typography'
 
-export default function ProductCard({ onButtonClick }) {
+export default function ProductCard({meal, onButtonClick }) {
   return (
     <Card sx={{ width: 0.25, maxWidth: '100%', boxShadow: 'lg', margin: 1 }}>
       <CardOverflow>
         <AspectRatio ratio={1 / 1} sx={{ minWidth: 200 }}>
           <img
-            src="https://s7d1.scene7.com/is/image/mcdonaldsstage/DC_202307_8936_EVM_M_BigMac_Coke_1564x1564?wid=1564&hei=1564&dpr=off"
-            alt=""
+            src={meal.image}
+            alt={meal.name}
           />
         </AspectRatio>
       </CardOverflow>
       <CardContent>
-        <Typography level="body-lg">Big Mac Combo Meal</Typography>
+        <Typography level="body-lg">{meal.name}</Typography>
 
         <Typography
           level="title-lg"
@@ -29,7 +29,7 @@ export default function ProductCard({ onButtonClick }) {
             </Chip>
           }
         >
-          32 SAR
+          {meal.price} SAR
         </Typography>
         <Typography level="body-sm">(Ends By 29/11)</Typography>
       </CardContent>

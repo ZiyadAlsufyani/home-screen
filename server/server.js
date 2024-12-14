@@ -13,7 +13,7 @@ const connector = new rti.Connector('HomeScreenDomainParticipantLibrary::HomeScr
 const output = connector.getOutput('HomeScreenPublisher::HomeScreenWriter');
 
 app.post('/write', async (req, res) => {
-  const { fromDevice, toDevice, orderNum } = req.body;
+  const { fromDevice, toDevice, orderNum, orderDetails } = req.body;
   console.log(req.body);
 
   try {
@@ -21,6 +21,7 @@ app.post('/write', async (req, res) => {
     output.instance.setString('fromDevice', fromDevice);
     output.instance.setString('toDevice', toDevice);
     output.instance.setNumber('orderNum', orderNum);
+    output.instance.setString('orderDetails', orderDetails);
     output.write();
 
     res.status(200).send('Data written successfully');

@@ -3,12 +3,13 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { useNavigate } from 'react-router-dom';
 import '../assets/Footer.css';
 
-const Footer = ({ selectedCount, orderNumber, incrementOrderNumber }) => {
+const Footer = ({ selectedCount, selectedMeals, orderNumber, incrementOrderNumber }) => {
   const navigate = useNavigate();
 
   const handleButtonClick = async () => {
     const fromDevice = 'home';
     const toDevices = ['kitchen', 'display']; // Array of toDevice values
+    const orderDetails = selectedMeals;
 
     try {
       // Send to each toDevice
@@ -18,7 +19,7 @@ const Footer = ({ selectedCount, orderNumber, incrementOrderNumber }) => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ fromDevice: fromDevice, toDevice: toDevice, orderNum: parseInt(orderNumber) })
+          body: JSON.stringify({ fromDevice: fromDevice, toDevice: toDevice, orderNum: parseInt(orderNumber), orderDetails: orderDetails })
         });
 
         const data = await response.text();
