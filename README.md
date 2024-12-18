@@ -11,8 +11,9 @@ The home screen component of the restaurant order management system. This applic
 1. Install dependencies:
 ```bash
 npm install
-
+```
 2. Start the development environment:
+```bash
 # Start both server and application
 npm run start:all
 
